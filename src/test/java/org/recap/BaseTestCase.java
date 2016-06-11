@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = ReCapMiddlewarePersistenceApplication.class)
+@SpringApplicationConfiguration(classes = Main.class)
 @WebAppConfiguration
 @Transactional(rollbackForClassName={})
 public class BaseTestCase {

@@ -2,7 +2,7 @@ package org.recap.model;
 
 import org.junit.Test;
 import org.recap.BaseTestCase;
-import org.recap.dao.BibliographicEntityDAO;
+import org.recap.repository.BibDetailsRespository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class BibliographicEntity_Test extends BaseTestCase {
     @Autowired
-    BibliographicEntityDAO bibliographicEntityDAO;
+    BibDetailsRespository bibDetailsRespository;
 
     @Test
     public void saveBib() throws Exception {
@@ -24,11 +24,11 @@ public class BibliographicEntity_Test extends BaseTestCase {
         BibliographictEntity.setCreatedDate(new Date());
         BibliographictEntity.setOwningInstitutionBibId("1");
         BibliographictEntity.setOwningInstitutionId(1);
-        BibliographictEntity savedBibEntity = bibliographicEntityDAO.save(BibliographictEntity);
+        BibliographictEntity savedBibEntity = bibDetailsRespository.save(BibliographictEntity);
         Integer bibliographicId = savedBibEntity.getBibliographicId();
         assertNotNull(bibliographicId);
 
-        Iterable<org.recap.model.BibliographictEntity> bibliographictEntities = bibliographicEntityDAO.findAll();
+        Iterable<org.recap.model.BibliographictEntity> bibliographictEntities = bibDetailsRespository.findAll();
 
         assertNotNull(bibliographictEntities);
     }
