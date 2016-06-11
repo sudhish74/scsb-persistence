@@ -6,11 +6,11 @@ The file application.properties has information on datasource and other paramete
 
 2. In order to run the application, use the following command.
 
-./gradlew clean bootRun
+    ./gradlew clean bootRun
 
 This will start tomcat listening on 8080 (default), and can be accessed at localhost:8080.
 
-3. In order to build a jar
-./gradlew clean build or ./gradlew clean build -Dskip.tests
+3. In order to build the jar
+    ./gradlew clean build or ./gradlew clean build -Dskip.tests
 
 
