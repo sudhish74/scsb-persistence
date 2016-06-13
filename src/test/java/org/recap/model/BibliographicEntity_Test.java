@@ -28,8 +28,8 @@ public class BibliographicEntity_Test extends BaseTestCase {
         Integer bibliographicId = savedBibEntity.getBibliographicId();
         assertNotNull(bibliographicId);
 
-        Iterable<org.recap.model.BibliographictEntity> bibliographictEntities = bibDetailsRespository.findAll();
+        BibliographictEntity bibliographictEntity = bibDetailsRespository.findOne(bibliographicId);
 
-        assertNotNull(bibliographictEntities);
+        assertNotNull(bibliographictEntity);
     }
 }

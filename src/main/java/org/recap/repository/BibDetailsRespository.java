@@ -6,4 +6,4 @@ import org.springframework.data.repository.CrudRepository;
 /**
  * Created by pvsubrah on 6/10/16.
  */
-public interface BibDetailsRespository extends CrudRepository<BibliographictEntity, Long> {}
+public interface BibDetailsRespository extends CrudRepository<BibliographictEntity, Integer> {}

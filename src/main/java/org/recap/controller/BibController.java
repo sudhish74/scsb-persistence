@@ -23,7 +23,7 @@ public class BibController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public BibliographictEntity findOne(Long bibId) {
+    public BibliographictEntity findOne(Integer bibId) {
         return bibDetailsRespository.findOne(bibId);
     }
     @RequestMapping(method = RequestMethod.POST)
