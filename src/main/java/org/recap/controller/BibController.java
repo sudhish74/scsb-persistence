@@ -1,7 +1,7 @@
 package org.recap.controller;
 
 import org.recap.model.BibliographictEntity;
-import org.recap.repository.BibDetailsRespository;
+import org.recap.repository.BibliographicDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/bib")
 public class BibController {
-    private final BibDetailsRespository bibDetailsRespository;
+    private final BibliographicDetailsRepository bibDetailsRespository;
 
     @Autowired
-    public BibController(BibDetailsRespository bibDetailsRespository) {
+    public BibController(BibliographicDetailsRepository bibDetailsRespository) {
         this.bibDetailsRespository = bibDetailsRespository;
     }
 
