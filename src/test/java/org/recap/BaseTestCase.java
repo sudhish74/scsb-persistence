@@ -15,9 +15,4 @@ import static org.junit.Assert.assertNotNull;
 @Transactional(rollbackForClassName={})
 public class BaseTestCase {
 
-	@Test
-	public void contextLoads() {
-
-	}
-
 }
