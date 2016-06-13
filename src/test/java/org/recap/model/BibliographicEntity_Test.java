@@ -2,7 +2,7 @@ package org.recap.model;
 
 import org.junit.Test;
 import org.recap.BaseTestCase;
-import org.recap.repository.BibDetailsRespository;
+import org.recap.repository.BibliographicDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
@@ -15,21 +15,21 @@ import static org.junit.Assert.assertNotNull;
 
 public class BibliographicEntity_Test extends BaseTestCase {
     @Autowired
-    BibDetailsRespository bibDetailsRespository;
+    BibliographicDetailsRepository bibDetailsRespository;
 
     @Test
-    public void saveBib() throws Exception {
-        BibliographictEntity BibliographictEntity = new BibliographictEntity();
-        BibliographictEntity.setContent("Mock Bib Content");
-        BibliographictEntity.setCreatedDate(new Date());
-        BibliographictEntity.setOwningInstitutionBibId("1");
-        BibliographictEntity.setOwningInstitutionId(1);
-        BibliographictEntity savedBibEntity = bibDetailsRespository.save(BibliographictEntity);
-        Integer bibliographicId = savedBibEntity.getBibliographicId();
+    public void saveBibliographic() throws Exception {
+        BibliographictEntity bibliographictEntity = new BibliographictEntity();
+        bibliographictEntity.setContent("Mock Bib Content");
+        bibliographictEntity.setCreatedDate(new Date());
+        bibliographictEntity.setOwningInstitutionBibId("1");
+        bibliographictEntity.setOwningInstitutionId(1);
+        BibliographictEntity savedbibliographictEntity = bibDetailsRespository.save(bibliographictEntity);
+        Integer bibliographicId = savedbibliographictEntity.getBibliographicId();
         assertNotNull(bibliographicId);
 
-        BibliographictEntity bibliographictEntity = bibDetailsRespository.findOne(bibliographicId);
-
+        bibliographictEntity = bibDetailsRespository.findOne(bibliographicId);
         assertNotNull(bibliographictEntity);
     }
+
 }
