@@ -30,19 +30,19 @@ public class BibliographicHoldingsItem_Test extends BaseTestCase {
 
     @Test
     public void saveBibliographicHoldingsItem() throws Exception {
-        BibliographictEntity bibliographictEntity = new BibliographictEntity();
-        bibliographictEntity.setContent("Mock Bib Content");
-        bibliographictEntity.setCreatedDate(new Date());
-        bibliographictEntity.setOwningInstitutionBibId("1");
-        bibliographictEntity.setOwningInstitutionId(1);
-        BibliographictEntity savedBibEntity = bibDetailsRespository.save(bibliographictEntity);
+        BibliographicEntity bibliographicEntity = new BibliographicEntity();
+        bibliographicEntity.setContent("Mock Bib Content");
+        bibliographicEntity.setCreatedDate(new Date());
+        bibliographicEntity.setOwningInstitutionBibId("1");
+        bibliographicEntity.setOwningInstitutionId(1);
+        BibliographicEntity savedBibEntity = bibDetailsRespository.save(bibliographicEntity);
         Integer bibliographicId = savedBibEntity.getBibliographicId();
         assertNotNull(bibliographicId);
-        bibliographictEntity = bibDetailsRespository.findOne(bibliographicId);
-        assertNotNull(bibliographictEntity);
+        bibliographicEntity = bibDetailsRespository.findOne(bibliographicId);
+        assertNotNull(bibliographicEntity);
 
         HoldingsEntity holdingsEntity = new HoldingsEntity();
-        holdingsEntity.setContent("Holdings Bib Content");
+        holdingsEntity.setContent("Mock Holdings Content");
         holdingsEntity.setBibliographicId(bibliographicId);
         holdingsEntity.setCreatedDate(new Date());
         holdingsEntity.setLastUpdatedDate(new Date());

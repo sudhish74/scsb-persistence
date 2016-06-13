@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "bibliographic_t", schema = "recap", catalog = "")
-public class BibliographictEntity {
+public class BibliographicEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "BIBLIOGRAPHIC_ID")
