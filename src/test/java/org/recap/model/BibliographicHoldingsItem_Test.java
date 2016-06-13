@@ -29,7 +29,7 @@ public class BibliographicHoldingsItem_Test extends BaseTestCase {
     BibliographicItemDetailsRepository bibliographicItemDetailsRepository;
 
     @Test
-    public void saveBibliographicHoldings() throws Exception {
+    public void saveBibliographicHoldingsItem() throws Exception {
         BibliographictEntity bibliographictEntity = new BibliographictEntity();
         bibliographictEntity.setContent("Mock Bib Content");
         bibliographictEntity.setCreatedDate(new Date());
