@@ -2,6 +2,7 @@ package org.recap.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by pvsubrah on 6/10/16.
@@ -32,6 +33,9 @@ public class BibliographicEntity {
 
     @Column(name = "OWNING_INST_BIB_ID")
     private String owningInstitutionBibId;
+
+    @OneToMany(mappedBy = "bibliographicEntity")
+    private List<HoldingsEntity> holdingsEntities;
 
     public Integer getBibliographicId() {
         return bibliographicId;
@@ -81,4 +85,11 @@ public class BibliographicEntity {
         this.owningInstitutionBibId = owningInstitutionBibId;
     }
 
+    public List<HoldingsEntity> getHoldingsEntities() {
+        return holdingsEntities;
+    }
+
+    public void setHoldingsEntities(List<HoldingsEntity> holdingsEntities) {
+        this.holdingsEntities = holdingsEntities;
+    }
 }

@@ -1,7 +1,10 @@
 package org.recap.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by pvsubrah on 6/11/16.
@@ -19,7 +22,7 @@ public class HoldingsEntity {
     @Column(name = "CONTENT")
     private String content;
 
-    @Column(name = "BIBLIOGRAPHIC_ID")
+    @Column(name = "BIBLIOGRAPHIC_ID", insertable=false, updatable=false)
     private Integer bibliographicId;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -32,6 +35,14 @@ public class HoldingsEntity {
 
     @Column(name = "OWNING_INST_HOLDINGS_ID")
     private String owningInstitutionHoldingsId;
+
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="BIBLIOGRAPHIC_ID")
+    @JsonIgnore
+    private BibliographicEntity bibliographicEntity;
+
+    @OneToMany(mappedBy = "holdingsEntity", cascade = CascadeType.ALL)
+    private List<ItemEntity> itemEntities;
 
     public Integer getHoldingsId() {
         return holdingsId;
@@ -79,5 +90,21 @@ public class HoldingsEntity {
 
     public void setOwningInstitutionHoldingsId(String owningInstitutionHoldingsId) {
         this.owningInstitutionHoldingsId = owningInstitutionHoldingsId;
+    }
+
+    public BibliographicEntity getBibliographicEntity() {
+        return bibliographicEntity;
+    }
+
+    public void setBibliographicEntity(BibliographicEntity bibliographicEntity) {
+        this.bibliographicEntity = bibliographicEntity;
+    }
+
+    public List<ItemEntity> getItemEntities() {
+        return itemEntities;
+    }
+
+    public void setItemEntities(List<ItemEntity> itemEntities) {
+        this.itemEntities = itemEntities;
     }
 }
