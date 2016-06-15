@@ -33,10 +33,10 @@ public class BibliographicHoldingsItem_Test extends BaseTestCase {
         BibliographicEntity bibliographicEntity = new BibliographicEntity();
         bibliographicEntity.setContent("Mock Bib Content");
         bibliographicEntity.setCreatedDate(new Date());
-        bibliographicEntity.setOwningInstitutionBibId("1");
+        bibliographicEntity.setOwningInstitutionBibId("888");
         bibliographicEntity.setOwningInstitutionId(1);
-        BibliographicEntity savedBibEntity = bibDetailsRespository.save(bibliographicEntity);
-        Integer bibliographicId = savedBibEntity.getBibliographicId();
+        BibliographicEntity savedbibliographictEntity = bibDetailsRespository.save(bibliographicEntity);
+        Integer bibliographicId = savedbibliographictEntity.getBibliographicId();
         assertNotNull(bibliographicId);
         bibliographicEntity = bibDetailsRespository.findOne(bibliographicId);
         assertNotNull(bibliographicEntity);

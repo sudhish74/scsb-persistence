@@ -1,5 +1,7 @@
 package org.recap.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -21,7 +23,7 @@ public class ItemEntity {
     @Column(name = "CUSTOMER_CODE")
     private String customerCode;
 
-    @Column(name = "HOLDINGS_ID")
+    @Column(name = "HOLDINGS_ID", insertable=false, updatable=false)
     private Integer holdingsId;
 
     @Column(name = "CALL_NUMBER")
@@ -64,6 +66,11 @@ public class ItemEntity {
 
     @Column(name = "NOTES_ID")
     private Integer notesId;
+
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="HOLDINGS_ID")
+    @JsonIgnore
+    private HoldingsEntity holdingsEntity;
 
     public Integer getItemId() {
         return itemId;
@@ -199,5 +206,13 @@ public class ItemEntity {
 
     public void setNotesId(Integer notesId) {
         this.notesId = notesId;
+    }
+
+    public HoldingsEntity getHoldingsEntity() {
+        return holdingsEntity;
+    }
+
+    public void setHoldingsEntity(HoldingsEntity holdingsEntity) {
+        this.holdingsEntity = holdingsEntity;
     }
 }

@@ -3,8 +3,9 @@ package org.recap.controller;
 import org.junit.Test;
 import org.recap.model.BibliographicEntity;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.util.StopWatch;
 
-import java.util.Date;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -68,10 +69,7 @@ public class BibliographicController_Test extends BaseControllerTestCase {
         Integer bibliographicId = savedBibliographicEntity.getBibliographicId();
         assertNotNull(bibliographicId);
 
-        mvcResult = this.mockMvc.perform(get("/bibliographic/findAll"))
-                .andExpect(status().isOk())
-                .andReturn();
-        BibliographicEntity[] bibliographicEntities = (BibliographicEntity[]) jsonToObject(mvcResult.getResponse().getContentAsString(), BibliographicEntity[].class);
+        BibliographicEntity[] bibliographicEntities = getBibliographicEntities();
         assertEquals(count, bibliographicEntities.length - 1);
     }
 
@@ -125,13 +123,34 @@ public class BibliographicController_Test extends BaseControllerTestCase {
         Integer bibliographicId3 = savedBibliographicEntity.getBibliographicId();
         assertNotNull(bibliographicId3);
 
-        mvcResult = this.mockMvc.perform(get("/bibliographic/findByRangeOfIds")
-                .param("fromId", String.valueOf(bibliographicId1))
-                .param("toId", String.valueOf(bibliographicId3)))
+        BibliographicEntity[] bibliographicEntities = getBibliographicEntities(bibliographicId1, bibliographicId3);
+        assertTrue(bibliographicEntities.length == 3);
+    }
+
+    @Test
+    public void findAll() throws Exception{
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        List<BibliographicEntity> bibliographicEntityList = Arrays.asList(getBibliographicEntities());
+        stopWatch.stop();
+        System.out.println("Total time for " + bibliographicEntityList.size() + " - bibs : " + stopWatch.getTotalTimeSeconds() + "ms");
+    }
+
+    private BibliographicEntity[] getBibliographicEntities() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(get("/bibliographic/findAll"))
+                .andExpect(status().isOk())
+                .andReturn();
+        return (BibliographicEntity[]) jsonToObject(mvcResult.getResponse().getContentAsString(), BibliographicEntity[].class);
+    }
+
+    private BibliographicEntity[] getBibliographicEntities(Integer fromId, Integer toId) throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(get("/bibliographic/findByRangeOfIds")
+                .param("fromId", String.valueOf(fromId))
+                .param("toId", String.valueOf(toId)))
                 .andExpect(status().isOk())
                 .andReturn();
         BibliographicEntity[] bibliographicEntities = (BibliographicEntity[]) jsonToObject(mvcResult.getResponse().getContentAsString(), BibliographicEntity[].class);
-        assertTrue(bibliographicEntities.length == 3);
+        return bibliographicEntities;
     }
 
 }
