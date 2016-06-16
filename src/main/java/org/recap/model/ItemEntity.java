@@ -32,16 +32,16 @@ public class ItemEntity {
     @Column(name = "CALL_NUMBER_TYPE")
     private String callNumberType;
 
-    @Column(name = "ITEM_AVAIL_STATUS_ID")
+    @Column(name = "ITEM_AVAIL_STATUS_ID", insertable=false, updatable=false)
     private Integer itemAvailabilityStatusId;
 
     @Column(name = "COPY_NUMBER")
     private Integer copyNumber;
 
-    @Column(name = "OWNING_INST_ID")
+    @Column(name = "OWNING_INST_ID", insertable=false, updatable=false)
     private Integer owningInstitutionId;
 
-    @Column(name = "COLLECTION_GROUP_ID")
+    @Column(name = "COLLECTION_GROUP_ID", insertable=false, updatable=false)
     private Integer collectionGroupId;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -71,6 +71,18 @@ public class ItemEntity {
     @JoinColumn(name="HOLDINGS_ID")
     @JsonIgnore
     private HoldingsEntity holdingsEntity;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ITEM_AVAIL_STATUS_ID")
+    private ItemStatusEntity itemStatusEntity;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "COLLECTION_GROUP_ID")
+    private CollectionGroupEntity collectionGroupEntity;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "OWNING_INST_ID")
+    private InstitutionEntity institutionEntity;
 
     public Integer getItemId() {
         return itemId;
@@ -214,5 +226,29 @@ public class ItemEntity {
 
     public void setHoldingsEntity(HoldingsEntity holdingsEntity) {
         this.holdingsEntity = holdingsEntity;
+    }
+
+    public ItemStatusEntity getItemStatusEntity() {
+        return itemStatusEntity;
+    }
+
+    public void setItemStatusEntity(ItemStatusEntity itemStatusEntity) {
+        this.itemStatusEntity = itemStatusEntity;
+    }
+
+    public CollectionGroupEntity getCollectionGroupEntity() {
+        return collectionGroupEntity;
+    }
+
+    public void setCollectionGroupEntity(CollectionGroupEntity collectionGroupEntity) {
+        this.collectionGroupEntity = collectionGroupEntity;
+    }
+
+    public InstitutionEntity getInstitutionEntity() {
+        return institutionEntity;
+    }
+
+    public void setInstitutionEntity(InstitutionEntity institutionEntity) {
+        this.institutionEntity = institutionEntity;
     }
 }
