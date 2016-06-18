@@ -1,5 +1,7 @@
 package org.recap.model;
 
+import org.omg.PortableInterceptor.HOLDING;
+
 import javax.persistence.*;
 
 /**
@@ -14,11 +16,19 @@ public class BibliographicHoldingsEntity {
     @Column(name = "BIBLIOGRAPHIC_HOLDINGS_ID")
     private Integer bibliographicHoldingsId;
 
-    @Column(name = "BIBLIOGRAPHIC_ID")
+    @Column(name = "BIBLIOGRAPHIC_ID", insertable=false, updatable=false)
     private Integer bibliographicId;
 
-    @Column(name = "HOLDINGS_ID")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "BIBLIOGRAPHIC_ID")
+    private BibliographicEntity bibliographicEntity;
+
+    @Column(name = "HOLDINGS_ID", insertable=false, updatable=false)
     private Integer holdingsId;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "HOLDINGS_ID")
+    private HoldingsEntity holdingsEntity;
 
     public Integer getBibliographicHoldingsId() {
         return bibliographicHoldingsId;
@@ -42,5 +52,21 @@ public class BibliographicHoldingsEntity {
 
     public void setHoldingsId(Integer holdingsId) {
         this.holdingsId = holdingsId;
+    }
+
+    public BibliographicEntity getBibliographicEntity() {
+        return bibliographicEntity;
+    }
+
+    public void setBibliographicEntity(BibliographicEntity bibliographicEntity) {
+        this.bibliographicEntity = bibliographicEntity;
+    }
+
+    public HoldingsEntity getHoldingsEntity() {
+        return holdingsEntity;
+    }
+
+    public void setHoldingsEntity(HoldingsEntity holdingsEntity) {
+        this.holdingsEntity = holdingsEntity;
     }
 }
