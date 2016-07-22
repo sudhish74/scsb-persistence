@@ -3,6 +3,7 @@ package org.recap.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -12,35 +13,42 @@ import java.util.List;
 
 @Entity
 @Table(name = "holdings_t", schema = "recap", catalog = "")
-public class HoldingsEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "HOLDINGS_ID")
+public class HoldingsEntity implements Serializable {
+
+    @Column(name = "HOLDINGS_ID", insertable = false, updatable = false)
     private Integer holdingsId;
 
     @Lob
     @Column(name = "CONTENT")
-    private String content;
-
-    @Column(name = "BIBLIOGRAPHIC_ID")
-    private Integer bibliographicId;
+    private byte[] content;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED_DATE")
     private Date createdDate;
 
+    @Column(name = "CREATED_BY")
+    private String createdBy;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "LAST_UPDATED_DATE")
     private Date lastUpdatedDate;
 
+    @Column(name = "LAST_UPDATED_BY")
+    private String lastUpdatedBy;
+
+    @Id
     @Column(name = "OWNING_INST_HOLDINGS_ID")
     private String owningInstitutionHoldingsId;
 
-    @OneToMany(mappedBy="holdingsEntity")
-    private List<BibliographicHoldingsEntity> bibliographicHoldingsEntities;
+    @ManyToMany(mappedBy = "holdingsEntities")
+    private List<BibliographicEntity> bibliographicEntities;
 
     @OneToMany(mappedBy = "holdingsEntity", cascade = CascadeType.ALL)
     private List<ItemEntity> itemEntities;
+
+    public HoldingsEntity() {
+    }
+
 
     public Integer getHoldingsId() {
         return holdingsId;
@@ -50,20 +58,12 @@ public class HoldingsEntity {
         this.holdingsId = holdingsId;
     }
 
-    public String getContent() {
+    public byte[] getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(byte[] content) {
         this.content = content;
-    }
-
-    public Integer getBibliographicId() {
-        return bibliographicId;
-    }
-
-    public void setBibliographicId(Integer bibliographicId) {
-        this.bibliographicId = bibliographicId;
     }
 
     public Date getCreatedDate() {
@@ -90,12 +90,12 @@ public class HoldingsEntity {
         this.owningInstitutionHoldingsId = owningInstitutionHoldingsId;
     }
 
-    public List<BibliographicHoldingsEntity> getBibliographicHoldingsEntities() {
-        return bibliographicHoldingsEntities;
+    public List<BibliographicEntity> getBibliographicEntities() {
+        return bibliographicEntities;
     }
 
-    public void setBibliographicHoldingsEntities(List<BibliographicHoldingsEntity> bibliographicHoldingsEntities) {
-        this.bibliographicHoldingsEntities = bibliographicHoldingsEntities;
+    public void setBibliographicEntities(List<BibliographicEntity> bibliographicEntities) {
+        this.bibliographicEntities = bibliographicEntities;
     }
 
     public List<ItemEntity> getItemEntities() {
@@ -104,5 +104,37 @@ public class HoldingsEntity {
 
     public void setItemEntities(List<ItemEntity> itemEntities) {
         this.itemEntities = itemEntities;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        HoldingsEntity holdingsEntity = (HoldingsEntity) o;
+
+        return owningInstitutionHoldingsId.equals(holdingsEntity.owningInstitutionHoldingsId);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return owningInstitutionHoldingsId.hashCode();
     }
 }

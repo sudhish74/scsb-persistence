@@ -8,6 +8,7 @@ import org.springframework.util.StopWatch;
 import java.util.*;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,7 +22,9 @@ public class BibliographicController_Test extends BaseControllerTestCase {
     @Test
     public void saveBibliographic() throws Exception {
         BibliographicEntity bibliographicEntity = new BibliographicEntity();
-        bibliographicEntity.setContent("Mock Bib Content");
+        String content = "Mock Bib Content";
+        byte[] mockContent = content.getBytes();
+        bibliographicEntity.setContent(mockContent);
         bibliographicEntity.setCreatedDate(new Date());
         bibliographicEntity.setOwningInstitutionBibId("555");
         bibliographicEntity.setOwningInstitutionId(1);
@@ -33,16 +36,19 @@ public class BibliographicController_Test extends BaseControllerTestCase {
                 .andExpect(status().isOk())
                 .andReturn();
         BibliographicEntity savedBibliographicEntity = (BibliographicEntity) jsonToObject(mvcResult.getResponse().getContentAsString(), BibliographicEntity.class);
-        Integer bibliographicId = savedBibliographicEntity.getBibliographicId();
-        assertNotNull(bibliographicId);
+        Integer owningInstitutionId = savedBibliographicEntity.getOwningInstitutionId();
+        String owningInstitutionBibId = savedBibliographicEntity.getOwningInstitutionBibId();
+        assertNotNull(owningInstitutionId);
+        assertNotNull(owningInstitutionBibId);
 
         MvcResult savedResult = this.mockMvc.perform(get("/bibliographic/findOne")
-                .param("bibliographicId", String.valueOf(bibliographicId)))
+                .param("owningInstitutionId", String.valueOf(owningInstitutionId))
+                .param("owningInstitutionBibId", String.valueOf(owningInstitutionBibId)))
                 .andExpect(status().isOk())
                 .andReturn();
         savedBibliographicEntity = (BibliographicEntity) jsonToObject(savedResult.getResponse().getContentAsString(), BibliographicEntity.class);
         assertNotNull(savedBibliographicEntity);
-        assertEquals(bibliographicId, savedBibliographicEntity.getBibliographicId());
+        assertEquals(owningInstitutionId, savedBibliographicEntity.getOwningInstitutionId());
     }
 
     @Test
@@ -54,7 +60,9 @@ public class BibliographicController_Test extends BaseControllerTestCase {
         long count = Long.valueOf(contentAsString);
 
         BibliographicEntity bibliographicEntity = new BibliographicEntity();
-        bibliographicEntity.setContent("Mock Bib Content");
+        String content = "Mock Bib Content";
+        byte[] mockContent = content.getBytes();
+        bibliographicEntity.setContent(mockContent);
         bibliographicEntity.setCreatedDate(new Date());
         bibliographicEntity.setOwningInstitutionBibId("111");
         bibliographicEntity.setOwningInstitutionId(1);
@@ -76,7 +84,9 @@ public class BibliographicController_Test extends BaseControllerTestCase {
     @Test
     public void find() throws Exception {
         BibliographicEntity bibliographicEntity = new BibliographicEntity();
-        bibliographicEntity.setContent("Mock Bib Content");
+        String content = "Mock Bib Content";
+        byte[] mockContent = content.getBytes();
+        bibliographicEntity.setContent(mockContent);
         bibliographicEntity.setCreatedDate(new Date());
         bibliographicEntity.setOwningInstitutionBibId("222");
         bibliographicEntity.setOwningInstitutionId(1);
@@ -92,7 +102,7 @@ public class BibliographicController_Test extends BaseControllerTestCase {
         assertNotNull(bibliographicId1);
 
         bibliographicEntity = new BibliographicEntity();
-        bibliographicEntity.setContent("Mock Bib Content");
+        bibliographicEntity.setContent(mockContent);
         bibliographicEntity.setCreatedDate(new Date());
         bibliographicEntity.setOwningInstitutionBibId("333");
         bibliographicEntity.setOwningInstitutionId(1);
@@ -108,7 +118,7 @@ public class BibliographicController_Test extends BaseControllerTestCase {
         assertNotNull(bibliographicId2);
 
         bibliographicEntity = new BibliographicEntity();
-        bibliographicEntity.setContent("Mock Bib Content");
+        bibliographicEntity.setContent(mockContent);
         bibliographicEntity.setCreatedDate(new Date());
         bibliographicEntity.setOwningInstitutionBibId("444");
         bibliographicEntity.setOwningInstitutionId(1);
