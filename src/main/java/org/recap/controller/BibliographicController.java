@@ -1,6 +1,7 @@
 package org.recap.controller;
 
 import org.recap.model.BibliographicEntity;
+import org.recap.model.BibliographicPK;
 import org.recap.repository.BibliographicDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,18 +29,23 @@ public class BibliographicController {
         this.bibliographicDetailsRepository = bibliographicDetailsRepository;
     }
 
+
+
     @RequestMapping(method = RequestMethod.GET, value = "/findOne")
-    public BibliographicEntity findOne(Integer bibliographicId) {
-        return bibliographicDetailsRepository.findOne(bibliographicId);
+    public BibliographicEntity findOne(Integer owningInstitutionId , String owningInstitutionBibId) {
+        BibliographicPK bibliographicPK = new BibliographicPK();
+        bibliographicPK.setOwningInstitutionId(owningInstitutionId);
+        bibliographicPK.setOwningInstitutionBibId(owningInstitutionBibId);
+        return bibliographicDetailsRepository.findOne(bibliographicPK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/findByRangeOfIds")
+/*    @RequestMapping(method = RequestMethod.GET, value = "/findByRangeOfIds")
     public List<BibliographicEntity> findByRangeOfIds(Integer fromId, Integer toId) {
         List<BibliographicEntity> bibliographicEntityList = new ArrayList<>();
         List<Integer> bibliographicIds = IntStream.rangeClosed(fromId, toId).boxed().collect(Collectors.toList());
         bibliographicEntityList.addAll((Collection<? extends BibliographicEntity>) bibliographicDetailsRepository.findAll(bibliographicIds));
         return bibliographicEntityList;
-    }
+    }*/
 
     @RequestMapping(method = RequestMethod.GET, value = "/findAll")
     public List<BibliographicEntity> findAll() {

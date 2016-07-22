@@ -1,6 +1,7 @@
 package org.recap.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -10,16 +11,16 @@ import java.util.List;
 
 @Entity
 @Table(name = "bibliographic_t", schema = "recap", catalog = "")
-public class BibliographicEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "BIBLIOGRAPHIC_ID")
+@IdClass(BibliographicPK.class)
+public class BibliographicEntity implements Serializable {
+    @Column(name = "BIBLIOGRAPHIC_ID", insertable = false, updatable = false)
     private Integer bibliographicId;
 
     @Lob
     @Column(name = "CONTENT")
-    private String content;
+    private byte[] content;
 
+    @Id
     @Column(name = "OWNING_INST_ID")
     private Integer owningInstitutionId;
 
@@ -27,16 +28,42 @@ public class BibliographicEntity {
     @Column(name = "CREATED_DATE")
     private Date createdDate;
 
+    @Column(name = "CREATED_BY")
+    private String createdBy;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "LAST_UPDATED_DATE")
     private Date lastUpdatedDate;
 
+    @Column(name = "LAST_UPDATED_BY")
+    private String lastUpdatedBy;
+
+    @Id
     @Column(name = "OWNING_INST_BIB_ID")
     private String owningInstitutionBibId;
 
-    @OneToMany(mappedBy="bibliographicEntity")
-    private List<BibliographicHoldingsEntity> bibliographicHoldingsEntities;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "OWNING_INST_ID", insertable=false, updatable=false)
+    private InstitutionEntity institutionEntity;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "bibliographic_holdings_t", joinColumns = {
+            @JoinColumn(name="OWNING_INST_BIB_ID", referencedColumnName = "OWNING_INST_BIB_ID"),
+            @JoinColumn(name="OWNING_INST_ID", referencedColumnName = "OWNING_INST_ID")},
+            inverseJoinColumns = @JoinColumn(name = "OWNING_INST_HOLDINGS_ID", referencedColumnName = "OWNING_INST_HOLDINGS_ID"))
+    private List<HoldingsEntity> holdingsEntities;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "bibliographic_item_t", joinColumns = {
+            @JoinColumn(name="OWNING_INST_BIB_ID", referencedColumnName = "OWNING_INST_BIB_ID"),
+            @JoinColumn(name="BIB_INST_ID", referencedColumnName = "OWNING_INST_ID")},
+            inverseJoinColumns = {
+                    @JoinColumn(name="OWNING_INST_ITEM_ID", referencedColumnName = "OWNING_INST_ITEM_ID"),
+                    @JoinColumn(name="ITEM_INST_ID", referencedColumnName = "OWNING_INST_ID") })
+    private List<ItemEntity> itemEntities;
+
+    public BibliographicEntity() {
+    }
 
     public Integer getBibliographicId() {
         return bibliographicId;
@@ -46,11 +73,11 @@ public class BibliographicEntity {
         this.bibliographicId = bibliographicId;
     }
 
-    public String getContent() {
+    public byte[] getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(byte[] content) {
         this.content = content;
     }
 
@@ -86,11 +113,44 @@ public class BibliographicEntity {
         this.owningInstitutionBibId = owningInstitutionBibId;
     }
 
-    public List<BibliographicHoldingsEntity> getBibliographicHoldingsEntities() {
-        return bibliographicHoldingsEntities;
+    public InstitutionEntity getInstitutionEntity() {
+        return institutionEntity;
     }
 
-    public void setBibliographicHoldingsEntities(List<BibliographicHoldingsEntity> bibliographicHoldingsEntities) {
-        this.bibliographicHoldingsEntities = bibliographicHoldingsEntities;
+    public void setInstitutionEntity(InstitutionEntity institutionEntity) {
+        this.institutionEntity = institutionEntity;
+    }
+
+    public List<HoldingsEntity> getHoldingsEntities() {
+        return holdingsEntities;
+    }
+
+    public void setHoldingsEntities(List<HoldingsEntity> holdingsEntities) {
+        this.holdingsEntities = holdingsEntities;
+    }
+
+    public List<ItemEntity> getItemEntities() {
+        return itemEntities;
+    }
+
+    public void setItemEntities(List<ItemEntity> itemEntities) {
+        this.itemEntities = itemEntities;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
     }
 }
+

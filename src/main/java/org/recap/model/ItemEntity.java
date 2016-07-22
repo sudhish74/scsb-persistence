@@ -3,7 +3,9 @@ package org.recap.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by pvsubrah on 6/11/16.
@@ -11,10 +13,9 @@ import java.util.Date;
 
 @Entity
 @Table(name = "item_t", schema = "recap", catalog = "")
-public class ItemEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ITEM_ID")
+@IdClass(ItemPK.class)
+public class ItemEntity implements Serializable{
+    @Column(name = "ITEM_ID", insertable = false,updatable = false)
     private Integer itemId;
 
     @Column(name = "BAR_CODE")
@@ -23,37 +24,38 @@ public class ItemEntity {
     @Column(name = "CUSTOMER_CODE")
     private String customerCode;
 
-    @Column(name = "HOLDINGS_ID", insertable=false, updatable=false)
-    private Integer holdingsId;
-
     @Column(name = "CALL_NUMBER")
     private String callNumber;
 
     @Column(name = "CALL_NUMBER_TYPE")
     private String callNumberType;
 
-    @Column(name = "ITEM_AVAIL_STATUS_ID", insertable=false, updatable=false)
+    @Column(name = "ITEM_AVAIL_STATUS_ID")
     private Integer itemAvailabilityStatusId;
 
     @Column(name = "COPY_NUMBER")
     private Integer copyNumber;
 
-    @Column(name = "OWNING_INST_ID", insertable=false, updatable=false)
+    @Id
+    @Column(name = "OWNING_INST_ID")
     private Integer owningInstitutionId;
 
-    @Column(name = "COLLECTION_GROUP_ID", insertable=false, updatable=false)
+    @Column(name = "COLLECTION_GROUP_ID")
     private Integer collectionGroupId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED_DATE")
     private Date createdDate;
 
+    @Column(name = "CREATED_BY")
+    private String createdBy;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "LAST_UPDATED_DATE")
     private Date lastUpdatedDate;
 
-    @Column(name = "BIBLIOGRAPHIC_ID")
-    private Integer bibliographicId;
+    @Column(name = "LAST_UPDATED_BY")
+    private String lastUpdatedBy;
 
     @Column(name = "USE_RESTRICTIONS")
     private String useRestrictions;
@@ -61,25 +63,32 @@ public class ItemEntity {
     @Column(name = "VOLUME_PART_YEAR")
     private String volumePartYear;
 
+    @Id
     @Column(name = "OWNING_INST_ITEM_ID")
     private String owningInstitutionItemId;
 
     @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="HOLDINGS_ID")
-    @JsonIgnore
+    @JoinColumn(name="OWNING_INST_HOLDINGS_ID")
     private HoldingsEntity holdingsEntity;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ITEM_AVAIL_STATUS_ID")
+    @JoinColumn(name = "ITEM_AVAIL_STATUS_ID", insertable=false, updatable=false)
     private ItemStatusEntity itemStatusEntity;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "COLLECTION_GROUP_ID")
+    @JoinColumn(name = "COLLECTION_GROUP_ID", insertable=false, updatable=false)
     private CollectionGroupEntity collectionGroupEntity;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "OWNING_INST_ID")
+    @JoinColumn(name = "OWNING_INST_ID", insertable=false, updatable=false)
     private InstitutionEntity institutionEntity;
+
+    @ManyToMany(mappedBy = "itemEntities")
+    private List<BibliographicEntity> bibliographicEntities;
+
+    public ItemEntity() {
+    }
+
 
     public Integer getItemId() {
         return itemId;
@@ -103,14 +112,6 @@ public class ItemEntity {
 
     public void setCustomerCode(String customerCode) {
         this.customerCode = customerCode;
-    }
-
-    public Integer getHoldingsId() {
-        return holdingsId;
-    }
-
-    public void setHoldingsId(Integer holdingsId) {
-        this.holdingsId = holdingsId;
     }
 
     public String getCallNumber() {
@@ -177,14 +178,6 @@ public class ItemEntity {
         this.lastUpdatedDate = lastUpdatedDate;
     }
 
-    public Integer getBibliographicId() {
-        return bibliographicId;
-    }
-
-    public void setBibliographicId(Integer bibliographicId) {
-        this.bibliographicId = bibliographicId;
-    }
-
     public String getUseRestrictions() {
         return useRestrictions;
     }
@@ -239,5 +232,77 @@ public class ItemEntity {
 
     public void setInstitutionEntity(InstitutionEntity institutionEntity) {
         this.institutionEntity = institutionEntity;
+    }
+
+    public List<BibliographicEntity> getBibliographicEntities() {
+        return bibliographicEntities;
+    }
+
+    public void setBibliographicEntities(List<BibliographicEntity> bibliographicEntities) {
+        this.bibliographicEntities = bibliographicEntities;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+}
+
+
+
+class ItemPK implements Serializable {
+    private Integer owningInstitutionId;
+    private String owningInstitutionItemId;
+
+
+    public ItemPK(){
+
+    }
+
+    public ItemPK(Integer owningInstitutionId, String owningInstitutionItemId) {
+        this.owningInstitutionId = owningInstitutionId;
+        this.owningInstitutionItemId = owningInstitutionItemId;
+    }
+
+    public Integer getOwningInstitutionId() {
+        return owningInstitutionId;
+    }
+
+    public void setOwningInstitutionId(Integer owningInstitutionId) {
+        this.owningInstitutionId = owningInstitutionId;
+    }
+
+    public String getOwningInstitutionItemId() {
+        return owningInstitutionItemId;
+    }
+
+    public void setOwningInstitutionItemId(String owningInstitutionItemId) {
+        this.owningInstitutionItemId = owningInstitutionItemId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.valueOf(owningInstitutionId.toString()+owningInstitutionItemId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        ItemPK itemPK  = (ItemPK) obj;
+        if(itemPK.getOwningInstitutionId().equals(owningInstitutionId) && itemPK.getOwningInstitutionItemId().equals(owningInstitutionItemId)){
+            return true;
+        }
+
+        return false;
     }
 }
