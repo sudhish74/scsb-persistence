@@ -1,5 +1,6 @@
 package org.recap.model;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.recap.BaseTestCase;
 import org.recap.repository.BibliographicDetailsRepository;
@@ -461,6 +462,7 @@ public class BibliographicEntityUT extends BaseTestCase {
 
     }
 
+    @Ignore
     @Test
     public void duplicateBibsWithDifferentItems() throws Exception {
         Random random = new Random();
