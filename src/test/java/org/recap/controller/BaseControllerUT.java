@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 /**
  * Created by chenchulakshmig on 6/14/16.
  */
-public class BaseControllerTestCase extends BaseTestCase {
+public class BaseControllerUT extends BaseTestCase {
     protected MockMvc mockMvc;
     protected HttpMessageConverter mappingJackson2HttpMessageConverter;
     protected MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
