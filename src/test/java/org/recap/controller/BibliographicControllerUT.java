@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by chenchulakshmig on 6/13/16.
  */
-public class BibliographicController_Test extends BaseControllerTestCase {
+public class BibliographicControllerUT extends BaseControllerUT {
 
     @Test
     public void saveBibliographic() throws Exception {
