@@ -1,6 +1,9 @@
 package org.recap.controller;
 
+import org.recap.model.BibliographicEntity;
+import org.recap.model.BibliographicPK;
 import org.recap.model.ItemEntity;
+import org.recap.model.ItemPK;
 import org.recap.repository.ItemDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,16 +31,11 @@ public class ItemController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/findOne")
-    public ItemEntity findOne(Integer itemId) {
+    public ItemEntity findOne(Integer owningInstitutionId,String owningInstitutionItemId) {
+        ItemPK itemId = new ItemPK();
+        itemId.setOwningInstitutionId(owningInstitutionId);
+        itemId.setOwningInstitutionItemId(owningInstitutionItemId);
         return itemDetailsRepository.findOne(itemId);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/findByRangeOfIds")
-    public List<ItemEntity> findByRangeOfIds(Integer fromId, Integer toId) {
-        List<ItemEntity> itemEntityList = new ArrayList<>();
-        List<Integer> itemIds = IntStream.rangeClosed(fromId, toId).boxed().collect(Collectors.toList());
-        itemEntityList.addAll((Collection<? extends ItemEntity>) itemDetailsRepository.findAll(itemIds));
-        return itemEntityList;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/findAll")

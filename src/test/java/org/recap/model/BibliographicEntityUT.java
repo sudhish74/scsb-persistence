@@ -6,6 +6,7 @@ import org.recap.BaseTestCase;
 import org.recap.repository.BibliographicDetailsRepository;
 //import org.recap.repository.BibliographicHoldingsDetailsRepository;
 import org.recap.repository.HoldingsDetailsRepository;
+import org.recap.repository.ItemDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by pvsubrah on 6/10/16.
@@ -31,6 +33,9 @@ public class BibliographicEntityUT extends BaseTestCase {
 
     @Autowired
     HoldingsDetailsRepository holdingsDetailsRepository;
+
+    @Autowired
+    ItemDetailsRepository itemDetailsRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -62,6 +67,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setCallNumberType("0");
         itemEntity.setCallNumber("callNum");
+        itemEntity.setCopyNumber(1);
         itemEntity.setCreatedDate(today);
         itemEntity.setCreatedBy("etl");
         itemEntity.setLastUpdatedDate(today);
@@ -109,6 +115,8 @@ public class BibliographicEntityUT extends BaseTestCase {
         String itemLastUpdatedDate = df.format(byBibliographicPK.getLastUpdatedDate());
         assertEquals(itemCreatedDate,date);
         assertEquals(itemLastUpdatedDate,date);
+        assertTrue(savedItemEntity.getItemAvailabilityStatusId() == 1);
+        assertTrue(savedItemEntity.getCopyNumber() == 1);
         assertEquals(savedItemEntity.getCallNumberType(),"0");
         assertEquals(savedItemEntity.getCallNumber(),"callNum");
         assertEquals(savedItemEntity.getCreatedBy(),"etl");
@@ -116,6 +124,9 @@ public class BibliographicEntityUT extends BaseTestCase {
         assertEquals(savedItemEntity.getBarcode(),"1231");
         assertEquals(savedItemEntity.getOwningInstitutionItemId(),".i1231");
         assertEquals(savedItemEntity.getCustomerCode(),"PA");
+
+         ItemEntity byOwningInstitutionItemId = itemDetailsRepository.findByOwningInstitutionItemId(savedItemEntity.getOwningInstitutionItemId());
+        assertNotNull(byOwningInstitutionItemId);
 
     }
 
@@ -579,7 +590,8 @@ public class BibliographicEntityUT extends BaseTestCase {
 
         BibliographicEntity savedBibliographicEntity2 = bibliographicDetailsRepository.saveAndFlush(bibliographicEntity2);
         entityManager.refresh(savedBibliographicEntity2);
-        BibliographicEntity byOwningInstitutionBibId = bibliographicDetailsRepository.findByOwningInstitutionIdAndOwningInstitutionBibId(1, owningInstitutionBibId);
+        BibliographicPK bibliographicPK = new BibliographicPK(1,owningInstitutionBibId);
+        BibliographicEntity byOwningInstitutionBibId = bibliographicDetailsRepository.findByOwningInstitutionIdAndOwningInstitutionBibId(1,owningInstitutionBibId);
         assertNotNull(byOwningInstitutionBibId);
         assertEquals(byOwningInstitutionBibId.getHoldingsEntities().size(), 2);
         assertEquals(byOwningInstitutionBibId.getItemEntities().size(), 2);

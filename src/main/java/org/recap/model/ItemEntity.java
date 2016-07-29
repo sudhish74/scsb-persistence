@@ -1,5 +1,6 @@
 package org.recap.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -84,6 +85,7 @@ public class ItemEntity implements Serializable{
     private InstitutionEntity institutionEntity;
 
     @ManyToMany(mappedBy = "itemEntities")
+    @JsonBackReference
     private List<BibliographicEntity> bibliographicEntities;
 
     public ItemEntity() {
@@ -261,48 +263,5 @@ public class ItemEntity implements Serializable{
 
 
 
-class ItemPK implements Serializable {
-    private Integer owningInstitutionId;
-    private String owningInstitutionItemId;
 
 
-    public ItemPK(){
-
-    }
-
-    public ItemPK(Integer owningInstitutionId, String owningInstitutionItemId) {
-        this.owningInstitutionId = owningInstitutionId;
-        this.owningInstitutionItemId = owningInstitutionItemId;
-    }
-
-    public Integer getOwningInstitutionId() {
-        return owningInstitutionId;
-    }
-
-    public void setOwningInstitutionId(Integer owningInstitutionId) {
-        this.owningInstitutionId = owningInstitutionId;
-    }
-
-    public String getOwningInstitutionItemId() {
-        return owningInstitutionItemId;
-    }
-
-    public void setOwningInstitutionItemId(String owningInstitutionItemId) {
-        this.owningInstitutionItemId = owningInstitutionItemId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Integer.valueOf(owningInstitutionId.toString()+owningInstitutionItemId);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        ItemPK itemPK  = (ItemPK) obj;
-        if(itemPK.getOwningInstitutionId().equals(owningInstitutionId) && itemPK.getOwningInstitutionItemId().equals(owningInstitutionItemId)){
-            return true;
-        }
-
-        return false;
-    }
-}
