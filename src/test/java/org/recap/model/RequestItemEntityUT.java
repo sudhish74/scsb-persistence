@@ -135,6 +135,7 @@ public class RequestItemEntityUT extends BaseTestCase{
         assertEquals(savedRequestItemEntity.getRequestTypeId(),savedReRequestTypeEntity.getRequestTypeId());
         assertEquals(savedRequestItemEntity.getCreatedDate(),today);
         assertEquals(savedRequestItemEntity.getLastUpdatedDate(),today);
+        assertEquals(savedRequestItemEntity.getRequestExpirationDate(),today);
         assertEquals(savedRequestItemEntity.getStopCode(),"test");
         assertTrue(savedRequestItemEntity.getRequestPosition() == 1);
         assertEquals(savedRequestItemEntity.getPatronId(),savedPatronEntity.getPatronId());

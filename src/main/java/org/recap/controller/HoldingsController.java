@@ -3,6 +3,7 @@ package org.recap.controller;
 import org.recap.model.HoldingsEntity;
 import org.recap.repository.HoldingsDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,22 +29,14 @@ public class HoldingsController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/findOne")
-    public HoldingsEntity findOne(Integer holdingsId) {
-        return holdingsDetailsRepository.findOne(holdingsId);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/findByRangeOfIds")
-    public List<HoldingsEntity> findByRangeOfIds(Integer fromId, Integer toId) {
-        List<HoldingsEntity> holdingsEntityList = new ArrayList<>();
-        List<Integer> holdingsIds = IntStream.rangeClosed(fromId, toId).boxed().collect(Collectors.toList());
-        holdingsEntityList.addAll((Collection<? extends HoldingsEntity>) holdingsDetailsRepository.findAll(holdingsIds));
-        return holdingsEntityList;
+    public HoldingsEntity findOne(String owningInstitutionHoldingsId) {
+       return holdingsDetailsRepository.findOne(owningInstitutionHoldingsId);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/findAll")
-    public List<HoldingsEntity> findAll() {
+    public List<HoldingsEntity> findAll(int pageNum , int numberOfRecords) {
         List<HoldingsEntity> holdingsEntityList = new ArrayList<>();
-        holdingsEntityList.addAll((Collection<? extends HoldingsEntity>) holdingsDetailsRepository.findAll());
+        holdingsEntityList.addAll(holdingsDetailsRepository.findAll(new PageRequest(pageNum,numberOfRecords)).getContent());
         return holdingsEntityList;
     }
 

@@ -1,14 +1,18 @@
 package org.recap.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.recap.model.BibliographicEntity;
 import org.recap.model.BibliographicPK;
 import org.recap.repository.BibliographicDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,7 +33,8 @@ public class BibliographicController {
         this.bibliographicDetailsRepository = bibliographicDetailsRepository;
     }
 
-
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @RequestMapping(method = RequestMethod.GET, value = "/findOne")
     public BibliographicEntity findOne(Integer owningInstitutionId , String owningInstitutionBibId) {
@@ -39,18 +44,10 @@ public class BibliographicController {
         return bibliographicDetailsRepository.findOne(bibliographicPK);
     }
 
-/*    @RequestMapping(method = RequestMethod.GET, value = "/findByRangeOfIds")
-    public List<BibliographicEntity> findByRangeOfIds(Integer fromId, Integer toId) {
-        List<BibliographicEntity> bibliographicEntityList = new ArrayList<>();
-        List<Integer> bibliographicIds = IntStream.rangeClosed(fromId, toId).boxed().collect(Collectors.toList());
-        bibliographicEntityList.addAll((Collection<? extends BibliographicEntity>) bibliographicDetailsRepository.findAll(bibliographicIds));
-        return bibliographicEntityList;
-    }*/
-
     @RequestMapping(method = RequestMethod.GET, value = "/findAll")
-    public List<BibliographicEntity> findAll() {
+    public List<BibliographicEntity> findAll(int pageNum,int numberOfRecords) {
         List<BibliographicEntity> bibliographicEntityList = new ArrayList<>();
-        bibliographicEntityList.addAll((Collection<? extends BibliographicEntity>) bibliographicDetailsRepository.findAll());
+        bibliographicEntityList.addAll(bibliographicDetailsRepository.findAll(new PageRequest(pageNum,numberOfRecords)).getContent());
         return bibliographicEntityList;
     }
 
@@ -61,6 +58,9 @@ public class BibliographicController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
     public BibliographicEntity create(@RequestBody BibliographicEntity bibliographicEntity) {
-        return bibliographicDetailsRepository.save(bibliographicEntity);
+        System.out.println(bibliographicEntity);
+        BibliographicEntity bibliographicEntity1 = bibliographicDetailsRepository.saveAndFlush(bibliographicEntity);
+        entityManager.refresh(bibliographicEntity1);
+        return bibliographicEntity1;
     }
 }
