@@ -1,8 +1,9 @@
-package org.recap.repository;
+package org.recap.model;
 
 import org.junit.Test;
 import org.recap.BaseTestCase;
 import org.recap.model.ItemStatusEntity;
+import org.recap.repository.ItemStatusDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertEquals;
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
 public class ItemStatusEntityUT extends BaseTestCase{
 
     @Autowired
-    ItemStatusDetailsRepository  itemStatusDetailsRepository;
+    ItemStatusDetailsRepository itemStatusDetailsRepository;
 
     @Test
     public void itemStatus(){

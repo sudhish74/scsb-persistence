@@ -1,8 +1,9 @@
-package org.recap.repository;
+package org.recap.model;
 
 import org.junit.Test;
 import org.recap.BaseTestCase;
 import org.recap.model.InstitutionEntity;
+import org.recap.repository.InstitutionDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertEquals;
@@ -22,7 +23,7 @@ public class InstitutionEntityUT extends BaseTestCase{
         institutionEntity.setInstitutionName("University of Chicago");
         InstitutionEntity entity = institutionDetailRepository.save(institutionEntity);
         assertNotNull(entity);
-        System.out.println("Institution Id-->"+entity.getInstitutionId());
+        assertNotNull(entity.getInstitutionId());
         assertEquals(entity.getInstitutionCode(),"UC");
         assertEquals(entity.getInstitutionName(),"University of Chicago");
         institutionDetailRepository.delete(institutionEntity);
