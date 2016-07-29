@@ -1,8 +1,9 @@
-package org.recap.repository;
+package org.recap.model;
 
 import org.junit.Test;
 import org.recap.BaseTestCase;
 import org.recap.model.CollectionGroupEntity;
+import org.recap.repository.CollectionGroupDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;

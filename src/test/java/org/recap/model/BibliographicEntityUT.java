@@ -13,6 +13,8 @@ import org.springframework.util.StopWatch;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -36,12 +38,14 @@ public class BibliographicEntityUT extends BaseTestCase {
     @Test
     public void saveBibSingleHoldings() throws Exception {
         Random random = new Random();
+        Date today = new Date();
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         BibliographicEntity bibliographicEntity = new BibliographicEntity();
         bibliographicEntity.setContent("mock Content".getBytes());
-        bibliographicEntity.setCreatedDate(new Date());
+        bibliographicEntity.setCreatedDate(today);
         bibliographicEntity.setCreatedBy("etl");
         bibliographicEntity.setLastUpdatedBy("etl");
-        bibliographicEntity.setLastUpdatedDate(new Date());
+        bibliographicEntity.setLastUpdatedDate(today);
         bibliographicEntity.setOwningInstitutionId(1);
         String owningInstitutionBibId = String.valueOf(random.nextInt());
         bibliographicEntity.setOwningInstitutionBibId(owningInstitutionBibId);
@@ -49,18 +53,18 @@ public class BibliographicEntityUT extends BaseTestCase {
 
         HoldingsEntity holdingsEntity = new HoldingsEntity();
         holdingsEntity.setContent("mock holdings".getBytes());
-        holdingsEntity.setCreatedDate(new Date());
+        holdingsEntity.setCreatedDate(today);
         holdingsEntity.setCreatedBy("etl");
-        holdingsEntity.setLastUpdatedDate(new Date());
+        holdingsEntity.setLastUpdatedDate(today);
         holdingsEntity.setLastUpdatedBy("etl");
         holdingsEntity.setOwningInstitutionHoldingsId(String.valueOf(random.nextInt()));
 
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setCallNumberType("0");
         itemEntity.setCallNumber("callNum");
-        itemEntity.setCreatedDate(new Date());
+        itemEntity.setCreatedDate(today);
         itemEntity.setCreatedBy("etl");
-        itemEntity.setLastUpdatedDate(new Date());
+        itemEntity.setLastUpdatedDate(today);
         itemEntity.setLastUpdatedBy("etl");
         itemEntity.setBarcode("1231");
         itemEntity.setOwningInstitutionItemId(".i1231");
@@ -83,11 +87,36 @@ public class BibliographicEntityUT extends BaseTestCase {
         bibliographicPK.setOwningInstitutionBibId(owningInstitutionBibId);
         BibliographicEntity byBibliographicPK = bibliographicDetailsRepository.findOne(bibliographicPK);
 
+        String fetchedCreatedDate = df.format(byBibliographicPK.getCreatedDate());
+        String fetchedLastUpdatedDate = df.format(byBibliographicPK.getLastUpdatedDate());
+        String date = df.format(today);
         assertNotNull(byBibliographicPK);
         assertNotNull(byBibliographicPK.getBibliographicId());
-        assertNotNull(byBibliographicPK.getLastUpdatedBy());
-        assertNotNull(byBibliographicPK.getCreatedBy());
+        assertEquals(fetchedCreatedDate,date);
+        assertEquals(fetchedLastUpdatedDate,date);
+        assertEquals(byBibliographicPK.getCreatedBy(),"etl");
+        assertEquals(byBibliographicPK.getLastUpdatedBy(),"etl");
+        HoldingsEntity savedHoldingEntity = byBibliographicPK.getHoldingsEntities().get(0);
+        String holdingCreatedDate = df.format(savedHoldingEntity.getCreatedDate());
+        String holdingLastUpdatedDate = df.format(savedHoldingEntity.getLastUpdatedDate());
+        assertEquals(holdingCreatedDate,date);
+        assertEquals(holdingLastUpdatedDate,date);
+        assertEquals(savedHoldingEntity.getCreatedBy(),"etl");
+        assertEquals(savedHoldingEntity.getLastUpdatedBy(),"etl");
         assertNotNull(byBibliographicPK.getHoldingsEntities().get(0).getHoldingsId());
+        ItemEntity savedItemEntity = byBibliographicPK.getHoldingsEntities().get(0).getItemEntities().get(0);
+        String itemCreatedDate = df.format(byBibliographicPK.getCreatedDate());
+        String itemLastUpdatedDate = df.format(byBibliographicPK.getLastUpdatedDate());
+        assertEquals(itemCreatedDate,date);
+        assertEquals(itemLastUpdatedDate,date);
+        assertEquals(savedItemEntity.getCallNumberType(),"0");
+        assertEquals(savedItemEntity.getCallNumber(),"callNum");
+        assertEquals(savedItemEntity.getCreatedBy(),"etl");
+        assertEquals(savedItemEntity.getLastUpdatedBy(),"etl");
+        assertEquals(savedItemEntity.getBarcode(),"1231");
+        assertEquals(savedItemEntity.getOwningInstitutionItemId(),".i1231");
+        assertEquals(savedItemEntity.getCustomerCode(),"PA");
+
     }
 
     @Test
@@ -550,11 +579,10 @@ public class BibliographicEntityUT extends BaseTestCase {
 
         BibliographicEntity savedBibliographicEntity2 = bibliographicDetailsRepository.saveAndFlush(bibliographicEntity2);
         entityManager.refresh(savedBibliographicEntity2);
-/*
         BibliographicEntity byOwningInstitutionBibId = bibliographicDetailsRepository.findByOwningInstitutionIdAndOwningInstitutionBibId(1, owningInstitutionBibId);
         assertNotNull(byOwningInstitutionBibId);
         assertEquals(byOwningInstitutionBibId.getHoldingsEntities().size(), 2);
-        assertEquals(byOwningInstitutionBibId.getItemEntities().size(), 2);*/
+        assertEquals(byOwningInstitutionBibId.getItemEntities().size(), 2);
 
     }
 
