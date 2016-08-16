@@ -10,7 +10,7 @@ public class BibliographicPK implements Serializable {
     private String owningInstitutionBibId;
 
     public BibliographicPK() {
-
+        //empty constructor
     }
 
     public BibliographicPK(Integer owningInstitutionId, String owningInstitutionBibId) {
@@ -43,6 +43,12 @@ public class BibliographicPK implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+
+        if (this.getClass() != obj.getClass())
+            return false;
+
         BibliographicPK bibliographicPK  = (BibliographicPK) obj;
         if(bibliographicPK.getOwningInstitutionId().equals(owningInstitutionId) && bibliographicPK.getOwningInstitutionBibId().equals(owningInstitutionBibId)){
             return true;
