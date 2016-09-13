@@ -54,6 +54,7 @@ public class ItemTrackingInfoEntityUT extends BaseTestCase{
         holdingsEntity.setCreatedBy("etl");
         holdingsEntity.setLastUpdatedDate(new Date());
         holdingsEntity.setLastUpdatedBy("etl");
+        holdingsEntity.setOwningInstitutionId(1);
         holdingsEntity.setOwningInstitutionHoldingsId(String.valueOf(random.nextInt()));
 
         ItemEntity itemEntity = new ItemEntity();

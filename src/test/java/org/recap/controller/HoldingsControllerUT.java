@@ -60,6 +60,7 @@ public class HoldingsControllerUT extends BaseControllerUT{
         holdingsEntity.setCreatedBy("etl");
         holdingsEntity.setLastUpdatedDate(today);
         holdingsEntity.setLastUpdatedBy("etl");
+        holdingsEntity.setOwningInstitutionId(1);
         holdingsEntity.setOwningInstitutionHoldingsId(String.valueOf(random.nextInt()));
 
         ItemEntity itemEntity = new ItemEntity();
