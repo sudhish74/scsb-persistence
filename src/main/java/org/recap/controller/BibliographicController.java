@@ -58,7 +58,6 @@ public class BibliographicController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
     public BibliographicEntity create(@RequestBody BibliographicEntity bibliographicEntity) {
-        System.out.println(bibliographicEntity);
         BibliographicEntity bibliographicEntity1 = bibliographicDetailsRepository.saveAndFlush(bibliographicEntity);
         entityManager.refresh(bibliographicEntity1);
         return bibliographicEntity1;
