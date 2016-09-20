@@ -77,7 +77,7 @@ public class HoldingsControllerUT extends BaseControllerUT{
         itemEntity.setCollectionGroupId(1);
         itemEntity.setCustomerCode("PA");
         itemEntity.setItemAvailabilityStatusId(1);
-        itemEntity.setHoldingsEntity(holdingsEntity);
+        itemEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
 
         bibliographicEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
         bibliographicEntity.setItemEntities(null);
@@ -95,7 +95,8 @@ public class HoldingsControllerUT extends BaseControllerUT{
         assertNotNull(savedBibliographicEntity.getBibliographicId());
         assertNotNull(savedBibliographicEntity.getHoldingsEntities().get(0).getHoldingsId());
         String owningInstHoldingId = savedBibliographicEntity.getHoldingsEntities().get(0).getOwningInstitutionHoldingsId();
-        HoldingsEntity savedHoldingsEntity = holdingsController.findOne(owningInstHoldingId);
+        Integer owningInstitutionId = savedBibliographicEntity.getHoldingsEntities().get(0).getOwningInstitutionId();
+        HoldingsEntity savedHoldingsEntity = holdingsController.findOne(owningInstitutionId, owningInstHoldingId);
         assertNotNull(savedHoldingsEntity);
         assertEquals(owningInstHoldingId, savedHoldingsEntity.getOwningInstitutionHoldingsId());
         HoldingsEntity byHoldingsId = holdingsDetailsRepository.findByHoldingsId(savedHoldingsEntity.getHoldingsId());

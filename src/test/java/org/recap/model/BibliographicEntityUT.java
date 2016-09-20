@@ -79,7 +79,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         itemEntity.setCollectionGroupId(1);
         itemEntity.setCustomerCode("PA");
         itemEntity.setItemAvailabilityStatusId(1);
-        itemEntity.setHoldingsEntity(holdingsEntity);
+        itemEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
 
         bibliographicEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
         bibliographicEntity.setItemEntities(Arrays.asList(itemEntity));
@@ -254,7 +254,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         itemEntity.setCallNumberType("1");
         itemEntity.setCustomerCode("1");
         itemEntity.setItemAvailabilityStatusId(1);
-        itemEntity.setHoldingsEntity(holdingsEntity);
+        itemEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
 
         bibliographicEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
         bibliographicEntity.setItemEntities(Arrays.asList(itemEntity));
@@ -302,7 +302,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         itemEntity1.setCallNumber("x.12321");
         itemEntity1.setCollectionGroupId(1);
         itemEntity1.setCallNumberType("1");
-        itemEntity1.setHoldingsEntity(holdingsEntity);
+        itemEntity1.setHoldingsEntities(Arrays.asList(holdingsEntity));
 
         ItemEntity itemEntity2 = new ItemEntity();
         itemEntity2.setCreatedDate(new Date());
@@ -317,7 +317,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         itemEntity2.setCallNumber("x.12321");
         itemEntity2.setCollectionGroupId(1);
         itemEntity2.setCallNumberType("1");
-        itemEntity2.setHoldingsEntity(holdingsEntity);
+        itemEntity2.setHoldingsEntities(Arrays.asList(holdingsEntity));
 
         bibliographicEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
         bibliographicEntity.setItemEntities(Arrays.asList(itemEntity1, itemEntity2));
@@ -371,7 +371,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         itemEntity1.setCallNumber("x.12321");
         itemEntity1.setCollectionGroupId(1);
         itemEntity1.setCallNumberType("1");
-        itemEntity1.setHoldingsEntity(holdingsEntity);
+        itemEntity1.setHoldingsEntities(Arrays.asList(holdingsEntity));
 
         bibliographicEntity1.setItemEntities(Arrays.asList(itemEntity1));
 
@@ -436,7 +436,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         itemEntity1.setCollectionGroupId(1);
         itemEntity1.setCallNumberType("1");
         itemEntity1.setCustomerCode("1");
-        itemEntity1.setHoldingsEntity(holdingsEntity1);
+        itemEntity1.setHoldingsEntities(Arrays.asList(holdingsEntity1));
 
         bibliographicEntity1.setItemEntities(Arrays.asList(itemEntity1));
 
@@ -473,7 +473,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         itemEntity2.setCollectionGroupId(1);
         itemEntity2.setCallNumberType("1");
         itemEntity2.setCustomerCode("1");
-        itemEntity2.setHoldingsEntity(holdingsEntity2);
+        itemEntity2.setHoldingsEntities(Arrays.asList(holdingsEntity2));
 
         bibliographicEntity2.setItemEntities(Arrays.asList(itemEntity2));
 
@@ -547,7 +547,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         itemEntity1.setCallNumberType("1");
         itemEntity1.setCustomerCode("1");
         itemEntity1.setItemAvailabilityStatusId(1);
-        itemEntity1.setHoldingsEntity(holdingsEntity1);
+        itemEntity1.setHoldingsEntities(Arrays.asList(holdingsEntity1));
 
         bibliographicEntity1.setHoldingsEntities(Arrays.asList(holdingsEntity1));
         bibliographicEntity1.setItemEntities(Arrays.asList(itemEntity1));
@@ -586,7 +586,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         itemEntity2.setCallNumberType("1");
         itemEntity2.setCustomerCode("1");
         itemEntity2.setItemAvailabilityStatusId(1);
-        itemEntity2.setHoldingsEntity(holdingsEntity2);
+        itemEntity2.setHoldingsEntities(Arrays.asList(holdingsEntity2));
 
         if (bibliographicEntity2.getHoldingsEntities()==null){
             bibliographicEntity2.setHoldingsEntities(new ArrayList<>());

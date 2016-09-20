@@ -1,7 +1,5 @@
 package org.recap.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -13,7 +11,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "holdings_t", schema = "recap", catalog = "")
-public class HoldingsEntity implements Serializable {
+@IdClass(HoldingsPK.class)
+public class HoldingsEntity implements Serializable{
 
     @Column(name = "HOLDINGS_ID", insertable = false, updatable = false)
     private Integer holdingsId;
@@ -36,6 +35,7 @@ public class HoldingsEntity implements Serializable {
     @Column(name = "LAST_UPDATED_BY")
     private String lastUpdatedBy;
 
+    @Id
     @Column(name = "OWNING_INST_ID")
     private Integer owningInstitutionId;
 
@@ -43,15 +43,24 @@ public class HoldingsEntity implements Serializable {
     @Column(name = "OWNING_INST_HOLDINGS_ID")
     private String owningInstitutionHoldingsId;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "OWNING_INST_ID", insertable = false, updatable = false)
+    private InstitutionEntity institutionEntity;
+
     @ManyToMany(mappedBy = "holdingsEntities")
     private List<BibliographicEntity> bibliographicEntities;
 
-    @OneToMany(mappedBy = "holdingsEntity", cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "item_holdings_t", joinColumns = {
+            @JoinColumn(name="OWNING_INST_HOLDINGS_ID", referencedColumnName = "OWNING_INST_HOLDINGS_ID"),
+            @JoinColumn(name="HOLDINGS_INST_ID", referencedColumnName = "OWNING_INST_ID")},
+            inverseJoinColumns = {
+                    @JoinColumn(name="OWNING_INST_ITEM_ID", referencedColumnName = "OWNING_INST_ITEM_ID"),
+                    @JoinColumn(name="ITEM_INST_ID", referencedColumnName = "OWNING_INST_ID") })
     private List<ItemEntity> itemEntities;
 
     public HoldingsEntity() {
     }
-
 
     public Integer getHoldingsId() {
         return holdingsId;
@@ -131,6 +140,14 @@ public class HoldingsEntity implements Serializable {
 
     public void setOwningInstitutionId(Integer owningInstitutionId) {
         this.owningInstitutionId = owningInstitutionId;
+    }
+
+    public InstitutionEntity getInstitutionEntity() {
+        return institutionEntity;
+    }
+
+    public void setInstitutionEntity(InstitutionEntity institutionEntity) {
+        this.institutionEntity = institutionEntity;
     }
 
     @Override

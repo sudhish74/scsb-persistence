@@ -98,7 +98,7 @@ public class RequestItemEntityUT extends BaseTestCase{
         itemEntity.setCollectionGroupId(1);
         itemEntity.setCustomerCode("PA");
         itemEntity.setItemAvailabilityStatusId(1);
-        itemEntity.setHoldingsEntity(holdingsEntity);
+        itemEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
 
         bibliographicEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
         bibliographicEntity.setItemEntities(Arrays.asList(itemEntity));

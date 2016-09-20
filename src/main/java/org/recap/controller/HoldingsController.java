@@ -1,6 +1,7 @@
 package org.recap.controller;
 
 import org.recap.model.HoldingsEntity;
+import org.recap.model.HoldingsPK;
 import org.recap.repository.HoldingsDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -29,8 +30,9 @@ public class HoldingsController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/findOne")
-    public HoldingsEntity findOne(String owningInstitutionHoldingsId) {
-       return holdingsDetailsRepository.findOne(owningInstitutionHoldingsId);
+    public HoldingsEntity findOne(Integer owningInstitutionId, String owningInstitutionHoldingsId) {
+        HoldingsPK holdingsPK = new HoldingsPK(owningInstitutionId, owningInstitutionHoldingsId);
+       return holdingsDetailsRepository.findOne(holdingsPK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/findAll")
