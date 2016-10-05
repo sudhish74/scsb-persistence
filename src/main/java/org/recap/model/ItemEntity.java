@@ -65,7 +65,10 @@ public class ItemEntity implements Serializable{
     @Column(name = "OWNING_INST_ITEM_ID")
     private String owningInstitutionItemId;
 
-    @ManyToMany(mappedBy = "itemEntities")
+    @Column(name = "IS_DELETED")
+    private boolean isDeleted;
+
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "itemEntities")
     private List<HoldingsEntity> holdingsEntities;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -80,12 +83,15 @@ public class ItemEntity implements Serializable{
     @JoinColumn(name = "OWNING_INST_ID", insertable=false, updatable=false)
     private InstitutionEntity institutionEntity;
 
-    @ManyToMany(mappedBy = "itemEntities")
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "itemEntities")
     private List<BibliographicEntity> bibliographicEntities;
 
     public ItemEntity() {
     }
 
+    public ItemEntity(Integer itemId) {
+        this.itemId = itemId;
+    }
 
     public Integer getItemId() {
         return itemId;
@@ -197,6 +203,14 @@ public class ItemEntity implements Serializable{
 
     public void setOwningInstitutionItemId(String owningInstitutionItemId) {
         this.owningInstitutionItemId = owningInstitutionItemId;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public List<HoldingsEntity> getHoldingsEntities() {
