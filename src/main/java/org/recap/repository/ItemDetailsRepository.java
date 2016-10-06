@@ -29,4 +29,7 @@ public interface ItemDetailsRepository extends CrudRepository<ItemEntity, ItemPK
     @Modifying(clearAutomatically = true)
     @Query("UPDATE ItemEntity item SET item.isDeleted = true WHERE item.itemId = :itemId")
     int markItemAsDeleted(@Param("itemId") Integer itemId);
+
+    @Query(value = "select itemStatus.statusCode from ItemEntity item, ItemStatusEntity itemStatus where item.itemAvailabilityStatusId = itemStatus.itemStatusId and item.barcode = :barcode and item.isDeleted = 0")
+    String getItemStatusByBarcodeAndIsDeletedFalse(@Param("barcode") String barcode);
 }
