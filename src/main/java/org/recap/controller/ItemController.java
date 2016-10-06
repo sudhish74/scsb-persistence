@@ -1,9 +1,8 @@
 package org.recap.controller;
 
-import org.recap.model.BibliographicEntity;
-import org.recap.model.BibliographicPK;
 import org.recap.model.ItemEntity;
 import org.recap.model.ItemPK;
+import org.recap.model.ItemStatusEntity;
 import org.recap.repository.ItemDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Created by chenchulakshmig on 6/13/16.
@@ -53,5 +50,10 @@ public class ItemController {
     @RequestMapping(method = RequestMethod.POST, value = "/create")
     public ItemEntity create(@RequestBody ItemEntity itemEntity) {
         return itemDetailsRepository.save(itemEntity);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/getItemStatusByBarcodeAndIsDeletedFalse")
+    public String getItemStatusByBarcodeAndIsDeletedFalse(String barcode) {
+        return itemDetailsRepository.getItemStatusByBarcodeAndIsDeletedFalse(barcode);
     }
 }
