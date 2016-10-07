@@ -26,6 +26,8 @@ public interface ItemDetailsRepository extends CrudRepository<ItemEntity, ItemPK
 
     List<ItemEntity> findByBarcode(String barcode);
 
+    List<ItemEntity> findByBarcodeIn(@Param("barcodes")List<String> barcodes);
+
     @Modifying(clearAutomatically = true)
     @Query("UPDATE ItemEntity item SET item.isDeleted = true WHERE item.itemId = :itemId")
     int markItemAsDeleted(@Param("itemId") Integer itemId);
