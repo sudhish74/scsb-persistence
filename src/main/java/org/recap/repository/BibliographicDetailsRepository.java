@@ -8,12 +8,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
  * Created by pvsubrah on 6/10/16.
  */
+@RepositoryRestResource(collectionResourceRel = "bibliographic", path = "bibliographic")
 public interface BibliographicDetailsRepository extends JpaRepository<BibliographicEntity, BibliographicPK> {
 
     BibliographicEntity findByOwningInstitutionIdAndOwningInstitutionBibId(Integer owningInstitutionId, String owningInstitutionBibId);
@@ -53,6 +56,7 @@ public interface BibliographicDetailsRepository extends JpaRepository<Bibliograp
     List<HoldingsEntity> getDeletedHoldingsEntities(@Param("owningInstitutionId") Integer owningInstitutionId, @Param("owningInstitutionBibId") String owningInstitutionBibId);
 
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE BibliographicEntity bib SET bib.isDeleted = true WHERE bib.bibliographicId IN :bibliographicId")
-    int markBibsAsDeleted(@Param("bibliographicId") List<Integer> bibliographicId);
+    @Transactional
+    @Query("UPDATE BibliographicEntity bib SET bib.isDeleted = true WHERE bib.bibliographicId IN :bibliographicIds")
+    int markBibsAsDeleted(@Param("bibliographicIds") List<Integer> bibliographicIds);
 }
