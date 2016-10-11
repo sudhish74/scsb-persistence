@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 /**
  * Created by hemalathas on 27/7/16.
  */
-public class RequestItemEntityUT extends BaseTestCase{
+public class RequestItemEntityUT extends BaseTestCase {
 
     @Autowired
     RequestItemDetailsRepository requestItemDetailsRepository;
@@ -42,7 +42,7 @@ public class RequestItemEntityUT extends BaseTestCase{
 
 
     @Test
-    public void testRequestItem(){
+    public void testRequestItem() {
 
         RequestTypeEntity requestTypeEntity = new RequestTypeEntity();
         requestTypeEntity.setRequestTypeCode("tst");
@@ -132,14 +132,24 @@ public class RequestItemEntityUT extends BaseTestCase{
         RequestItemEntity savedRequestItemEntity = requestItemDetailsRepository.save(requestItemEntity);
         assertNotNull(savedRequestItemEntity);
         assertNotNull(savedRequestItemEntity.getRequestId());
-        assertEquals(savedRequestItemEntity.getItemId(),byBibliographicPK.getHoldingsEntities().get(0).getItemEntities().get(0).getItemId());
-        assertEquals(savedRequestItemEntity.getRequestTypeId(),savedReRequestTypeEntity.getRequestTypeId());
-        assertEquals(savedRequestItemEntity.getCreatedDate(),today);
-        assertEquals(savedRequestItemEntity.getLastUpdatedDate(),today);
-        assertEquals(savedRequestItemEntity.getRequestExpirationDate(),today);
-        assertEquals(savedRequestItemEntity.getStopCode(),"test");
+        assertEquals(savedRequestItemEntity.getItemId(), byBibliographicPK.getHoldingsEntities().get(0).getItemEntities().get(0).getItemId());
+        assertEquals(savedRequestItemEntity.getRequestTypeId(), savedReRequestTypeEntity.getRequestTypeId());
+        assertEquals(savedRequestItemEntity.getCreatedDate(), today);
+        assertEquals(savedRequestItemEntity.getLastUpdatedDate(), today);
+        assertEquals(savedRequestItemEntity.getRequestExpirationDate(), today);
+        assertEquals(savedRequestItemEntity.getStopCode(), "test");
         assertTrue(savedRequestItemEntity.getRequestPosition() == 1);
-        assertEquals(savedRequestItemEntity.getPatronId(),savedPatronEntity.getPatronId());
+        assertEquals(savedRequestItemEntity.getPatronId(), savedPatronEntity.getPatronId());
+
+        List<RequestItemEntity> requestItemEntities = requestItemDetailsRepository.findByItemIdIn(Arrays.asList(requestItemEntity.getItemId()));
+        assertNotNull(requestItemEntities);
+        assertTrue(requestItemEntities.size() == 1);
+        assertTrue(requestItemEntities.get(0).getRequestId() == savedRequestItemEntity.getRequestId());
+
+        requestItemDetailsRepository.deleteByItemIdIn(Arrays.asList(requestItemEntity.getItemId()));
+
+        List<RequestItemEntity> requestItemEntitiesAfterDelete = requestItemDetailsRepository.findByItemIdIn(Arrays.asList(requestItemEntity.getItemId()));
+        assertTrue(requestItemEntitiesAfterDelete.size() == 0);
     }
 
 }

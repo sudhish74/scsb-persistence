@@ -1,9 +1,21 @@
 package org.recap.repository;
 
 import org.recap.model.RequestItemEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Created by chenchulakshmig on 6/13/16.
  */
-public interface RequestItemDetailsRepository extends CrudRepository<RequestItemEntity, Integer> {}
+@RepositoryRestResource(collectionResourceRel = "requestItem", path = "requestItem")
+public interface RequestItemDetailsRepository extends PagingAndSortingRepository<RequestItemEntity, Integer> {
+
+    List<RequestItemEntity> findByItemIdIn(@Param("itemIds") List<Integer> itemIds);
+
+    @Transactional
+    int deleteByItemIdIn(@Param("itemIds") List<Integer> itemIds);
+}
