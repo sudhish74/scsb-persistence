@@ -2,10 +2,12 @@ package org.recap.repository;
 
 import org.junit.Test;
 import org.recap.BaseTestCase;
+import org.recap.controller.BaseControllerUT;
 import org.recap.model.BibliographicEntity;
 import org.recap.model.HoldingsEntity;
 import org.recap.model.ItemEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MvcResult;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,12 +17,15 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by chenchulakshmig on 28/9/16.
  */
-public class BibliographicDetailsRepositoryUT extends BaseTestCase {
+public class BibliographicDetailsRepositoryUT extends BaseControllerUT {
 
     @Autowired
     BibliographicDetailsRepository bibliographicDetailsRepository;
@@ -59,6 +64,15 @@ public class BibliographicDetailsRepositoryUT extends BaseTestCase {
 
         BibliographicEntity entity = bibliographicDetailsRepository.findByOwningInstitutionIdAndOwningInstitutionBibId(bibliographicEntity.getOwningInstitutionId(), bibliographicEntity.getOwningInstitutionBibId());
         assertTrue(entity.isDeleted());
+
+        MvcResult mvcResult = this.mockMvc.perform(get("/bibliographic/search/findByOwningInstitutionIdAndOwningInstitutionBibId")
+                .param("owningInstitutionId", String.valueOf(bibliographicEntity.getOwningInstitutionId()))
+                .param("owningInstitutionBibId", bibliographicEntity.getOwningInstitutionBibId()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
     }
 
     private BibliographicEntity saveSingleBibMultipleHoldingsItems() throws Exception {

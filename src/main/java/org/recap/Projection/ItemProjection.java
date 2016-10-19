@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by chenchulakshmig on 7/10/16.
  */
-@Projection(name = "edit", types = ItemEntity.class)
+@Projection(name = "itemProjection", types = ItemEntity.class)
 public interface ItemProjection {
 
     Integer getItemId();
