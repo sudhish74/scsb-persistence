@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.recap.model.BibliographicEntity;
 import org.recap.model.HoldingsEntity;
 import org.recap.model.ItemEntity;
+import org.recap.repository.BibliographicDetailsRepository;
 import org.recap.repository.HoldingsDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -37,9 +38,11 @@ public class HoldingsControllerUT extends BaseControllerUT{
     @Autowired
     HoldingsDetailsRepository holdingsDetailsRepository;
 
+    @Autowired
+    BibliographicDetailsRepository bibliographicDetailsRepository;
 
 
-    public BibliographicEntity createBibliographic(){
+    public Integer createBibliographic(){
         Random random = new Random();
         Date today = new Date();
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
@@ -83,19 +86,19 @@ public class HoldingsControllerUT extends BaseControllerUT{
         bibliographicEntity.setItemEntities(null);
 
         holdingsEntity.setItemEntities(null);
-        BibliographicEntity savedBibliographicEntity = bibliographicController.create(bibliographicEntity);
-        return savedBibliographicEntity;
+        Integer bibliographicId = bibliographicController.create(bibliographicEntity);
+        return bibliographicId;
     }
 
 
     @Test
     public void saveAndFindHoldingsEntity() throws Exception{
-        BibliographicEntity savedBibliographicEntity = createBibliographic();
-        assertNotNull(savedBibliographicEntity);
-        assertNotNull(savedBibliographicEntity.getBibliographicId());
-        assertNotNull(savedBibliographicEntity.getHoldingsEntities().get(0).getHoldingsId());
-        String owningInstHoldingId = savedBibliographicEntity.getHoldingsEntities().get(0).getOwningInstitutionHoldingsId();
-        Integer owningInstitutionId = savedBibliographicEntity.getHoldingsEntities().get(0).getOwningInstitutionId();
+        Integer bibliographicId = createBibliographic();
+        assertNotNull(bibliographicId);
+        BibliographicEntity bibliographicEntity = bibliographicDetailsRepository.findByBibliographicId(bibliographicId);
+        assertNotNull(bibliographicEntity.getHoldingsEntities().get(0).getHoldingsId());
+        String owningInstHoldingId = bibliographicEntity.getHoldingsEntities().get(0).getOwningInstitutionHoldingsId();
+        Integer owningInstitutionId = bibliographicEntity.getHoldingsEntities().get(0).getOwningInstitutionId();
         HoldingsEntity savedHoldingsEntity = holdingsController.findOne(owningInstitutionId, owningInstHoldingId);
         assertNotNull(savedHoldingsEntity);
         assertEquals(owningInstHoldingId, savedHoldingsEntity.getOwningInstitutionHoldingsId());
@@ -110,11 +113,9 @@ public class HoldingsControllerUT extends BaseControllerUT{
                 .andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
         long count = Long.valueOf(contentAsString);
-        BibliographicEntity savedBibliographicEntity = createBibliographic();
-        assertNotNull(savedBibliographicEntity);
-        assertNotNull(savedBibliographicEntity.getBibliographicId());
-        assertNotNull(savedBibliographicEntity.getHoldingsEntities().get(0).getHoldingsId());
-                /*HoldingsEntity[] holdingsEntities = getHoldingEntities();
+        Integer bibliographicId = createBibliographic();
+        assertNotNull(bibliographicId);
+               /*HoldingsEntity[] holdingsEntities = getHoldingEntities();
         assertEquals(count, holdingsEntities.length - 1);*/
 
     }

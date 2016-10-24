@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.recap.model.BibliographicEntity;
 import org.recap.model.HoldingsEntity;
 import org.recap.model.ItemEntity;
+import org.recap.repository.BibliographicDetailsRepository;
 import org.recap.repository.HoldingsDetailsRepository;
 import org.recap.repository.ItemDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,10 @@ public class ItemControllerUT extends BaseControllerUT{
     @Autowired
     BibliographicController bibliographicController;
 
+    @Autowired
+    BibliographicDetailsRepository bibliographicDetailsRepository;
 
-    public BibliographicEntity createBibliographic(){
+    public Integer createBibliographic(){
         Random random = new Random();
         Date today = new Date();
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
@@ -81,14 +84,15 @@ public class ItemControllerUT extends BaseControllerUT{
         bibliographicEntity.setItemEntities(Arrays.asList(itemEntity));
 
         holdingsEntity.setItemEntities(Arrays.asList(itemEntity));
-        BibliographicEntity savedBibliographicEntity = bibliographicController.create(bibliographicEntity);
-        return savedBibliographicEntity;
+        Integer bibliographicId = bibliographicController.create(bibliographicEntity);
+        return bibliographicId;
     }
 
     @Test
     public void saveItem() throws Exception{
-        BibliographicEntity bibliographicEntity = createBibliographic();
-        assertNotNull(bibliographicEntity);
+        Integer bibliographicId = createBibliographic();
+        assertNotNull(bibliographicId);
+        BibliographicEntity bibliographicEntity = bibliographicDetailsRepository.findByBibliographicId(bibliographicId);
         assertNotNull(bibliographicEntity.getBibliographicId());
         assertNotNull(bibliographicEntity.getHoldingsEntities().get(0).getItemEntities().get(0).getItemId());
         Integer owningInstId = bibliographicEntity.getHoldingsEntities().get(0).getItemEntities().get(0).getOwningInstitutionId();
@@ -107,10 +111,8 @@ public class ItemControllerUT extends BaseControllerUT{
                 .andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
         long count = Long.valueOf(contentAsString);
-        BibliographicEntity bibliographicEntity = createBibliographic();
-        assertNotNull(bibliographicEntity);
-        assertNotNull(bibliographicEntity.getBibliographicId());
-        assertNotNull(bibliographicEntity.getHoldingsEntities().get(0).getItemEntities().get(0).getItemId());
+        Integer bibliographicId = createBibliographic();
+        assertNotNull(bibliographicId);
         /*ItemEntity[] itemEntities = getItemEntities();
         assertEquals(count, itemEntities.length - 1);*/
 
@@ -159,6 +161,21 @@ public class ItemControllerUT extends BaseControllerUT{
         List<ItemEntity> itemEntityList = Arrays.asList(getItemEntities());
         stopWatch.stop();
         System.out.println("Total time for " + itemEntityList.size() + " - bibs : " + stopWatch.getTotalTimeSeconds() + "ms");
+    }
+
+    @Test
+    public void  getItemStatusByBarcodeAndIsDeletedFalse() throws Exception{
+        Integer bibliographicId = createBibliographic();
+        assertNotNull(bibliographicId);
+
+        MvcResult savedResult = this.mockMvc.perform(get("/item/getItemStatusByBarcodeAndIsDeletedFalse")
+                .param("barcode", "1231"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String itemStatus = savedResult.getResponse().getContentAsString();
+        assertNotNull(itemStatus);
+        assertEquals(itemStatus, "Available");
     }
 
     private ItemEntity[] getItemEntities() throws Exception {
