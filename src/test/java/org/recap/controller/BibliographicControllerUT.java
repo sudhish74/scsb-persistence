@@ -1,11 +1,15 @@
 package org.recap.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.recap.model.BibliographicEntity;
 import org.springframework.http.MediaType;
+import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.StopWatch;
+
+import java.io.IOException;
 import java.util.*;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
@@ -29,31 +33,29 @@ public class BibliographicControllerUT extends BaseControllerUT {
         bibliographicEntity.setCreatedBy("etl");
         bibliographicEntity.setLastUpdatedBy("etl");
         bibliographicEntity.setLastUpdatedDate(today);
-        bibliographicEntity.setOwningInstitutionId(1);
+        int owningInstitutionId = 1;
+        bibliographicEntity.setOwningInstitutionId(owningInstitutionId);
         String owningInstitutionBibId = String.valueOf(random.nextInt());
         bibliographicEntity.setOwningInstitutionBibId(owningInstitutionBibId);
         bibliographicEntity.setHoldingsEntities(null);
         bibliographicEntity.setItemEntities(null);
-        String bibliographicJson = objectToJson(bibliographicEntity);
+        ObjectMapper objectMapper = new ObjectMapper();
         MvcResult mvcResult = this.mockMvc.perform(post("/bibliographic/create")
                 .contentType(contentType)
-                .content(bibliographicJson))
+                .content(objectMapper.writeValueAsString(bibliographicEntity)))
                 .andExpect(status().isOk())
                 .andReturn();
-        BibliographicEntity savedBibliographicEntity = (BibliographicEntity) jsonToObject(mvcResult.getResponse().getContentAsString(), BibliographicEntity.class);
-        Integer owningInstitutionId = savedBibliographicEntity.getOwningInstitutionId();
-        owningInstitutionBibId = savedBibliographicEntity.getOwningInstitutionBibId();
-        assertNotNull(owningInstitutionId);
-        assertNotNull(owningInstitutionBibId);
+        Integer bibliographicId = (Integer) jsonToObject(mvcResult.getResponse().getContentAsString(), Integer.class);
+        assertNotNull(bibliographicId);
 
         MvcResult savedResult = this.mockMvc.perform(get("/bibliographic/findOne")
                 .param("owningInstitutionId", String.valueOf(owningInstitutionId))
                 .param("owningInstitutionBibId", String.valueOf(owningInstitutionBibId)))
                 .andExpect(status().isOk())
                 .andReturn();
-        savedBibliographicEntity = (BibliographicEntity) jsonToObject(savedResult.getResponse().getContentAsString(), BibliographicEntity.class);
+        BibliographicEntity savedBibliographicEntity = (BibliographicEntity) jsonToObject(savedResult.getResponse().getContentAsString(), BibliographicEntity.class);
         assertNotNull(savedBibliographicEntity);
-        assertEquals(owningInstitutionId, savedBibliographicEntity.getOwningInstitutionId());
+        assertEquals(bibliographicId, savedBibliographicEntity.getBibliographicId());
     }
 
     @Test
@@ -77,14 +79,13 @@ public class BibliographicControllerUT extends BaseControllerUT {
         bibliographicEntity.setOwningInstitutionBibId(owningInstitutionBibId);
         bibliographicEntity.setHoldingsEntities(null);
         bibliographicEntity.setItemEntities(null);
-        String bibliographicJson = objectToJson(bibliographicEntity);
+        ObjectMapper objectMapper = new ObjectMapper();
         mvcResult = this.mockMvc.perform(post("/bibliographic/create")
                 .contentType(contentType)
-                .content(bibliographicJson))
+                .content(objectMapper.writeValueAsString(bibliographicEntity)))
                 .andExpect(status().isOk())
                 .andReturn();
-        BibliographicEntity savedBibliographicEntity = (BibliographicEntity) jsonToObject(mvcResult.getResponse().getContentAsString(), BibliographicEntity.class);
-        Integer bibliographicId = savedBibliographicEntity.getBibliographicId();
+        Integer bibliographicId = (Integer) jsonToObject(mvcResult.getResponse().getContentAsString(), Integer.class);
         assertNotNull(bibliographicId);
 
         /*BibliographicEntity[] bibliographicEntities = getBibliographicEntities();

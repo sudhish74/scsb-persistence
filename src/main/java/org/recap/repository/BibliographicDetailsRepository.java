@@ -19,6 +19,8 @@ import java.util.List;
 @RepositoryRestResource(collectionResourceRel = "bibliographic", path = "bibliographic")
 public interface BibliographicDetailsRepository extends JpaRepository<BibliographicEntity, BibliographicPK> {
 
+    BibliographicEntity findByBibliographicId(Integer bibliographicId);
+
     BibliographicEntity findByOwningInstitutionIdAndOwningInstitutionBibId(@Param("owningInstitutionId") Integer owningInstitutionId, @Param("owningInstitutionBibId") String owningInstitutionBibId);
 
     @Query(value = "SELECT COUNT(*) FROM ITEM_T, BIBLIOGRAPHIC_ITEM_T WHERE BIBLIOGRAPHIC_ITEM_T.ITEM_INST_ID = ITEM_T.OWNING_INST_ID " +
