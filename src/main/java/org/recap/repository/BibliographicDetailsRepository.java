@@ -19,7 +19,7 @@ import java.util.List;
 @RepositoryRestResource(collectionResourceRel = "bibliographic", path = "bibliographic")
 public interface BibliographicDetailsRepository extends JpaRepository<BibliographicEntity, BibliographicPK> {
 
-    BibliographicEntity findByBibliographicId(Integer bibliographicId);
+    BibliographicEntity findByBibliographicId(@Param("bibliographicId") Integer bibliographicId);
 
     BibliographicEntity findByOwningInstitutionIdAndOwningInstitutionBibId(@Param("owningInstitutionId") Integer owningInstitutionId, @Param("owningInstitutionBibId") String owningInstitutionBibId);
 
